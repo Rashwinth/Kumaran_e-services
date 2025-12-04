@@ -101,10 +101,9 @@ exports.register = async (req, res) => {
   }
 };
 
-
 exports.login = async (req, res) => {
   try {
-    const { identifier, password } = req.body;
+    const { identifier, password, portal } = req.body;
 
     if (!identifier || !password) {
       return res.status(400).json({
@@ -141,6 +140,25 @@ exports.login = async (req, res) => {
         success: false,
         message: "Invalid credentials",
       });
+    }
+
+    // Role-based access control
+    if (portal === "frontend") {
+      // Frontend portal: only staff can login
+      if (user.role !== "staff") {
+        return res.status(403).json({
+          success: false,
+          message: "Access denied. This portal is for staff members only.",
+        });
+      }
+    } else if (portal === "admin") {
+      // Admin portal: only admin and manager can login
+      if (user.role !== "admin" && user.role !== "manager") {
+        return res.status(403).json({
+          success: false,
+          message: " Please use the staff portal.",
+        });
+      }
     }
 
     // Update last login
@@ -276,7 +294,6 @@ exports.refreshToken = async (req, res) => {
   }
 };
 
-
 exports.logout = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -299,7 +316,6 @@ exports.logout = async (req, res) => {
   }
 };
 
-
 exports.getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -316,7 +332,6 @@ exports.getMe = async (req, res) => {
     });
   }
 };
-
 
 exports.updatePassword = async (req, res) => {
   try {

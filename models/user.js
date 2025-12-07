@@ -38,12 +38,6 @@ const userSchema = new mongoose.Schema(
       minlength: [8, "Password must be at least 8 characters"],
       validate: {
         validator: function (password) {
-          // Password must contain:
-          // - At least 8 characters
-          // - At least 1 uppercase letter
-          // - At least 1 lowercase letter
-          // - At least 1 number
-          // - At least 1 special character
           const passwordRegex =
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
           return passwordRegex.test(password);
@@ -106,7 +100,6 @@ userSchema.pre("save", async function () {
       const salt = await bcrypt.genSalt(10);
       this.password = await bcrypt.hash(this.password, salt);
     }
-
   } catch (error) {
     next(error);
   }

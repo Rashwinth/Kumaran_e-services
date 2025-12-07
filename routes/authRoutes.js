@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const {
-  register,
   login,
   refreshToken,
   logout,
@@ -15,7 +14,6 @@ router.get("/", (req, res) => {
   res.send("Backend is running");
 });
 
-router.post("/register", register);
 router.post("/login", login);
 router.post("/refresh", refreshToken);
 

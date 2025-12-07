@@ -20,6 +20,7 @@ app.use(cors());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/admin", authRoutes);
 
 // Health check route
 app.get("/api/health", (req, res) => {
